@@ -1,4 +1,3 @@
-// src/components/TaskForm.js
 import React, { useState } from 'react';
 import { taskService } from '../services/api';
 
@@ -10,10 +9,10 @@ const TaskForm = ({ onTaskAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-    
+
     setSubmitting(true);
     setError(''); // Reset previous errors
-    
+
     try {
       const newTask = await taskService.createTask({ title });
       setTitle('');

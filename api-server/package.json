@@ -1,18 +1,23 @@
 {
   "name": "api-server",
   "version": "1.0.0",
-  "description": "",
+  "description": "API server using serverless functions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "deploy": "netlify deploy"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "body-parser": "^2.2.0",
+    "express": "^4.17.1",
     "cors": "^2.8.5",
-    "express": "^5.1.0",
-    "sqlite3": "^5.1.7"
-  }
+    "body-parser": "^1.19.0",
+    "mongoose": "^5.10.9",
+    "@netlify/functions": "^2.15.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "14.x"
+  },
+  "author": "Your Name",
+  "license": "MIT"
 }
