@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+const db = require('./db'); // Importing DB connection
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -11,50 +12,61 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// Données simulées (mock data)
-let tasks = [
-  { id: 1, title: 'Apprendre Express', completed: false },
-  { id: 2, title: 'Créer une API REST', completed: false }
-];
-
-// Récupérer toutes les tâches
+// Get all tasks
 app.get('/api/tasks', (req, res) => {
-  res.json(tasks);
+  db.all('SELECT * FROM tasks', [], (err, rows) => {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.json(rows);
+  });
 });
 
-// Récupérer une tâche par ID
+// Get task by ID
 app.get('/api/tasks/:id', (req, res) => {
-  const task = tasks.find(t => t.id === parseInt(req.params.id));
-  if (!task) return res.status(404).json({ error: 'Tâche non trouvée' });
-  res.json(task);
+  const taskId = parseInt(req.params.id);
+  db.get('SELECT * FROM tasks WHERE id = ?', [taskId], (err, row) => {
+    if (err || !row) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json(row);
+  });
 });
 
-// Ajouter une nouvelle tâche
+// Add new task
 app.post('/api/tasks', (req, res) => {
-  const newTask = {
-    id: tasks.length + 1,
-    title: req.body.title,
-    completed: false
-  };
-  tasks.push(newTask);
-  res.status(201).json(newTask);
+  const { title } = req.body;
+  db.run('INSERT INTO tasks (title) VALUES (?)', [title], function (err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    }
+    res.status(201).json({ id: this.lastID, title, completed: 0 });
+  });
 });
 
-// Supprimer une tâche par ID
+// Complete a task
+app.patch('/api/tasks/:id/complete', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  db.run('UPDATE tasks SET completed = 1 WHERE id = ?', [taskId], function (err) {
+    if (err || this.changes === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json({ message: 'Task marked as complete' });
+  });
+});
+
+// Delete task
 app.delete('/api/tasks/:id', (req, res) => {
   const taskId = parseInt(req.params.id);
-  const taskIndex = tasks.findIndex(t => t.id === taskId);
-
-  if (taskIndex === -1) {
-    return res.status(404).json({ error: 'Tâche non trouvée' });
-  }
-
-  // Supprimer la tâche
-  const deletedTask = tasks.splice(taskIndex, 1);
-  res.json({ message: 'Tâche supprimée avec succès', task: deletedTask[0] });
+  db.run('DELETE FROM tasks WHERE id = ?', [taskId], function (err) {
+    if (err || this.changes === 0) {
+      return res.status(404).json({ error: 'Task not found' });
+    }
+    res.json({ message: 'Task deleted successfully' });
+  });
 });
 
-// Démarrer le serveur
+// Start server
 app.listen(PORT, () => {
-  console.log(`Serveur en écoute sur le port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

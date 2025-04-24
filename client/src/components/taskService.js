@@ -1,42 +1,50 @@
-// src/services/api.js
+// src/components/TaskPage.js
+import React, { useEffect, useState } from 'react';
+import { taskService } from '../services/api';
+import TaskList from './TaskList';
+import TaskForm from './TaskForm';
 
-export const taskService = {
-    // Récupérer toutes les tâches
-    getAllTasks: async () => {
-      const response = await fetch('http://localhost:5000/api/tasks');
-      if (!response.ok) {
-        throw new Error('Erreur lors du chargement des tâches');
+const TaskPage = () => {
+  const [tasks, setTasks] = useState([]);
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const fetchedTasks = await taskService.getTasks();
+        setTasks(fetchedTasks);
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
       }
-      return await response.json();
-    },
-  
-    // Créer une nouvelle tâche
-    createTask: async (taskData) => {
-      const response = await fetch('http://localhost:5000/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(taskData),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Erreur lors de la création de la tâche');
-      }
-  
-      return await response.json();
-    },
-  
-    // Supprimer une tâche par ID
-    deleteTask: async (taskId) => {
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
-        method: 'DELETE',
-      });
-  
-      if (!response.ok) {
-        throw new Error('Erreur lors de la suppression de la tâche');
-      }
-      return await response.json();
-    },
+    };
+    fetchTasks();
+  }, []);
+
+  const handleTaskAdded = (newTask) => {
+    setTasks([...tasks, newTask]);
   };
-  
+
+  const handleTaskDelete = (taskId) => {
+    setTasks(tasks.filter((task) => task.id !== taskId));
+  };
+
+  const handleTaskComplete = (taskId) => {
+    setTasks(
+      tasks.map((task) =>
+        task.id === taskId ? { ...task, completed: true } : task
+      )
+    );
+  };
+
+  return (
+    <div>
+      <TaskForm onTaskAdded={handleTaskAdded} />
+      <TaskList
+        tasks={tasks}
+        onTaskDelete={handleTaskDelete}
+        onTaskComplete={handleTaskComplete}
+      />
+    </div>
+  );
+};
+
+export default TaskPage;
