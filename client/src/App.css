@@ -1,38 +1,166 @@
-.App {
+/* src/App.css */
+
+:root {
+  --primary-light: #63b3ed;
+  --primary: #3182ce;
+  --primary-dark: #2c5282;
+  --error: #e53e3e;
+  --success: #38a169;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to bottom, var(--primary-light), var(--primary-dark));
+  min-height: 100vh;
+}
+
+.todo-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+.todo-card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.todo-header {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
+  color: white;
+  padding: 1.5rem;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.todo-header h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: bold;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.todo-content {
+  padding: 1.5rem;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Task Form Styles */
+.task-form h2 {
+  color: var(--primary-dark);
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.task-form form {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.task-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.task-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+}
+
+.task-button {
+  background: linear-gradient(to right, var(--primary), var(--primary-dark));
   color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.App-link {
-  color: #61dafb;
+.task-button:hover {
+  background: linear-gradient(to right, #2b6cb0, #1a365d);
+  transform: translateY(-1px);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.task-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: #fed7d7;
+  color: var(--error);
+  padding: 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* Task List Styles */
+.task-list {
+  margin-top: 2rem;
+}
+
+.task-list h2 {
+  color: var(--primary-dark);
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+}
+
+.empty-tasks {
+  background-color: #f7fafc;
+  text-align: center;
+  padding: 1.5rem;
+  color: #718096;
+  border-radius: 4px;
+}
+
+.task-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #ebf8ff, #e6fffa);
+  border-left: 4px solid var(--primary);
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.complete-button {
+  color: var(--success);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+}
+
+.delete-button {
+  color: var(--error);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.25rem;
+  padding: 0.25rem;
+}
+
+.complete-button:hover,
+.delete-button:hover {
+  transform: scale(1.1);
 }

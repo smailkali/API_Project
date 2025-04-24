@@ -1,36 +1,44 @@
 // src/components/TaskList.js
-import React, { useState, useEffect } from 'react';
-import { taskService } from '../services/api';
+import React from 'react';
 
-const TaskList = () => {
-  const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
-
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const data = await taskService.getAllTasks();
-        setTasks(data);
-        setLoading(false);
-      } catch (err) {
-        setError('Erreur lors du chargement des tâches');
-        setLoading(false);
-      }
-    };
-    fetchTasks();
-  }, []);
-
-  if (loading) return <div>Chargement...</div>;
-  if (error) return <div style={{ color: 'red' }}>{error}</div>;
+const TaskList = ({ tasks, onTaskDelete, onTaskComplete }) => {
+  if (!tasks || tasks.length === 0) {
+    return (
+      <div className="task-list">
+        <h2>Mes tâches</h2>
+        <div className="empty-tasks">
+          Aucune tâche pour le moment
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
-      <h2>Liste des tâches</h2>
+    <div className="task-list">
+      <h2>Mes tâches</h2>
       <ul>
         {tasks.map((task) => (
-          <li key={task.id}>
-            {task.title} {task.completed ? '✔️' : '❌'}
+          <li key={task.id} className="task-item">
+            <span style={{ 
+              textDecoration: task.completed ? 'line-through' : 'none',
+              opacity: task.completed ? 0.7 : 1
+            }}>
+              {task.title}
+            </span>
+            <div className="task-actions">
+              <button 
+                className="complete-button"
+                onClick={() => onTaskComplete(task.id)}
+              >
+                ✓
+              </button>
+              <button 
+                className="delete-button"
+                onClick={() => onTaskDelete(task.id)}
+              >
+                ✕
+              </button>
+            </div>
           </li>
         ))}
       </ul>

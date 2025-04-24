@@ -1,3 +1,4 @@
+// server.js - Configuration de l'API avec Express
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -10,27 +11,25 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ----------------------
-// Mock data and routes
-// ----------------------
+// Données simulées (mock data)
 let tasks = [
   { id: 1, title: 'Apprendre Express', completed: false },
   { id: 2, title: 'Créer une API REST', completed: false }
 ];
 
-// GET all tasks
+// Récupérer toutes les tâches
 app.get('/api/tasks', (req, res) => {
   res.json(tasks);
 });
 
-// GET task by ID
+// Récupérer une tâche par ID
 app.get('/api/tasks/:id', (req, res) => {
   const task = tasks.find(t => t.id === parseInt(req.params.id));
   if (!task) return res.status(404).json({ error: 'Tâche non trouvée' });
   res.json(task);
 });
 
-// POST a new task
+// Ajouter une nouvelle tâche
 app.post('/api/tasks', (req, res) => {
   const newTask = {
     id: tasks.length + 1,
@@ -41,12 +40,21 @@ app.post('/api/tasks', (req, res) => {
   res.status(201).json(newTask);
 });
 
-// Base route
-app.get('/', (req, res) => {
-  res.json({ message: 'API opérationnelle' });
+// Supprimer une tâche par ID
+app.delete('/api/tasks/:id', (req, res) => {
+  const taskId = parseInt(req.params.id);
+  const taskIndex = tasks.findIndex(t => t.id === taskId);
+
+  if (taskIndex === -1) {
+    return res.status(404).json({ error: 'Tâche non trouvée' });
+  }
+
+  // Supprimer la tâche
+  const deletedTask = tasks.splice(taskIndex, 1);
+  res.json({ message: 'Tâche supprimée avec succès', task: deletedTask[0] });
 });
 
-// Start the server
+// Démarrer le serveur
 app.listen(PORT, () => {
-  console.log(`Serveur en écoute a le port ${PORT}`);
+  console.log(`Serveur en écoute sur le port ${PORT}`);
 });

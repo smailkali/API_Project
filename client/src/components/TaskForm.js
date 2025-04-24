@@ -10,10 +10,10 @@ const TaskForm = ({ onTaskAdded }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!title.trim()) return;
-
+    
     setSubmitting(true);
-    setError(''); // Reset previous errors
-
+    setError(''); // Réinitialiser les erreurs précédentes
+    
     try {
       const newTask = await taskService.createTask({ title });
       setTitle('');
@@ -27,21 +27,26 @@ const TaskForm = ({ onTaskAdded }) => {
   };
 
   return (
-    <div>
+    <div className="task-form">
       <h2>Ajouter une tâche</h2>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
+          className="task-input"
           placeholder="Nouvelle tâche"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           disabled={submitting}
         />
-        <button type="submit" disabled={submitting}>
+        <button 
+          type="submit" 
+          className="task-button"
+          disabled={submitting}
+        >
           {submitting ? 'Ajout...' : 'Ajouter'}
         </button>
       </form>
-      {error && <div style={{ color: 'red' }}>{error}</div>}
+      {error && <div className="error-message">{error}</div>}
     </div>
   );
 };
