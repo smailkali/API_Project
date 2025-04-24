@@ -48,5 +48,5 @@ app.get('/', (req, res) => {
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Serveur en écoute sur le port ${PORT}`);
+  console.log(`Serveur en écoute a le port ${PORT}`);
 });
