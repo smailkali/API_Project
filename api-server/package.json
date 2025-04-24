@@ -7,13 +7,14 @@
     "start": "node server.js",
     "deploy": "netlify deploy"
   },
-  "dependencies": {
-    "express": "^4.17.1",
-    "cors": "^2.8.5",
-    "body-parser": "^1.19.0",
-    "mongoose": "^5.10.9",
-    "@netlify/functions": "^2.15.0"
-  },
+ "dependencies": {
+  "express": "^4.17.1",
+  "cors": "^2.8.5",
+  "body-parser": "^1.19.0",
+  "mongoose": "^5.10.9",
+  "@netlify/functions": "^2.12.0"
+},
+
   "devDependencies": {},
   "engines": {
     "node": "14.x"
