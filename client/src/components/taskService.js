@@ -1,50 +1,17 @@
-// src/components/TaskPage.js
-import React, { useEffect, useState } from 'react';
-import { taskService } from '../services/api';
-import TaskList from './TaskList';
-import TaskForm from './TaskForm';
+export const taskService = {
+  createTask: async (taskData) => {
+    const response = await fetch('https://webappbackend.netlify.app/.netlify/functions/tasks', { // Correct URL here
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(taskData),
+    });
 
-const TaskPage = () => {
-  const [tasks, setTasks] = useState([]);
+    if (!response.ok) {
+      throw new Error('Error creating task');
+    }
 
-  useEffect(() => {
-    const fetchTasks = async () => {
-      try {
-        const fetchedTasks = await taskService.getTasks();
-        setTasks(fetchedTasks);
-      } catch (error) {
-        console.error('Error fetching tasks:', error);
-      }
-    };
-    fetchTasks();
-  }, []);
-
-  const handleTaskAdded = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
-
-  const handleTaskDelete = (taskId) => {
-    setTasks(tasks.filter((task) => task.id !== taskId));
-  };
-
-  const handleTaskComplete = (taskId) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === taskId ? { ...task, completed: true } : task
-      )
-    );
-  };
-
-  return (
-    <div>
-      <TaskForm onTaskAdded={handleTaskAdded} />
-      <TaskList
-        tasks={tasks}
-        onTaskDelete={handleTaskDelete}
-        onTaskComplete={handleTaskComplete}
-      />
-    </div>
-  );
+    return await response.json(); // Return the created task
+  },
 };
-
-export default TaskPage;
